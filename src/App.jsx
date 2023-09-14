@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import "./App.css";
 import Player from "./components/Player";
 import { GoMute, GoUnmute } from "react-icons/go";
+import { Mp3context } from "./context/Mp3context";
 
 const songs = [
   {
@@ -9,7 +10,7 @@ const songs = [
     title: "À Lôi (Prod. By Haima X Minboo)",
     artist: "Double2T",
     img: "/public/img/aloi.jpg",
-    src: "/public/mp3/À Lôi (Prod. By Haima X Minboo).mp3",
+    src: "/public/mp3/À Lôi.mp3",
   },
   {
     id: 2,
@@ -92,7 +93,7 @@ const songs = [
 
 function App() {
   const audioRef = useRef(new Audio());
-  const [currentSongIndex, setCurrentSongIndex] = useState(1);
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(0.5);
@@ -115,7 +116,6 @@ function App() {
     };
     const handleNextSong = () => {
       nextSong();
-      console.log(audioRef.current);
     };
     audio.addEventListener("loadedmetadata", handleDurationchange);
     audio.addEventListener("timeupdate", handleCurrentTimechange);
@@ -135,7 +135,7 @@ function App() {
   }, [isPlaying, currentSongIndex]);
 
   useEffect(() => {
-    if (currentSongIndex) {
+    if (currentSongIndex != -1) {
       const currentSong = songs[currentSongIndex];
       audioRef.current.src = currentSong.src;
       audioRef.current.load();
@@ -176,6 +176,7 @@ function App() {
   const handleMute = () => {
     audioRef.current.muted = !audioRef.current.muted;
     setIsMuted(audioRef.current.muted);
+    setVolume(audioRef.current.muted ? 0 : 0.5);
   };
 
   const handleLoop = () => {
@@ -188,7 +189,19 @@ function App() {
   };
 
   return (
-    <>
+    <Mp3context.Provider
+      value={{
+        isPlaying,
+        togglePlay,
+        nextSong,
+        prevSong,
+        handleLoop,
+        handleShuffle,
+        duration,
+        currentTime,
+        audio: audioRef.current,
+      }}
+    >
       <h1>Playing List</h1>
       <div className="song-container">
         <div className="big-img">
@@ -220,17 +233,7 @@ function App() {
               <p>{songs[currentSongIndex].artist}</p>
             </div>
           </div>
-          <Player
-            isPlaying={isPlaying}
-            onToggle={togglePlay}
-            onNext={nextSong}
-            onPrev={prevSong}
-            onLoop={handleLoop}
-            onShuffle={handleShuffle}
-            duration={duration}
-            currentTime={currentTime}
-            audio={audioRef.current}
-          />
+          <Player />
           <div className="volume">
             <button onClick={handleMute}>
               {isMuted ? <GoMute /> : <GoUnmute />}
@@ -247,7 +250,7 @@ function App() {
           </div>
         </div>
       </div>
-    </>
+    </Mp3context.Provider>
   );
 }
 
