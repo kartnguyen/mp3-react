@@ -1,0 +1,153 @@
+h1 {
+    text-align: center;
+    color: purple;
+    text-transform: capitalize;
+    font-size: 54px;
+    margin: 0 auto;
+    padding: 12px;
+    font-family: 'Dancing Script', cursive;
+    border-bottom: 1px solid #333;
+}
+
+.song-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 30px;
+}
+
+.song-container .big-img {
+    width: 40%;
+    text-align: center;
+}
+
+.song-container .big-img h2 {
+    color: white;
+    font-family: 'Dancing Script', cursive;
+    padding-bottom: 20px;
+    font-size: 34px;
+}
+
+.song-container .big-img img {
+    width: 50%;
+    border-radius: 12px;
+    height: auto;
+}
+
+.songlist {
+    width: 60%;
+    border-left: 1px solid #333;
+}
+
+.song {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 12px 16px;
+}
+
+.song:hover {
+    background-color: purple;
+    color: #fff;
+}
+
+
+.player {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 11;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: purple;
+    height: 100px;
+    color: #fff;
+}
+
+.player .img {
+    border: 1px solid #878787;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+}
+
+.player .img.active {
+    animation: turnAround 8s linear infinite;
+}
+
+@keyframes turnAround {
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.songInfor {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 30%;
+    margin-left: 30px;
+}
+
+.songInfor .name {
+    margin-left: 24px;
+}
+
+.songInfor .name p {
+    margin-top: 8px;
+    color: #dcdcdcbd;
+}
+
+.playerHandle {
+    width: 40%;
+    text-align: center;
+}
+
+.button {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+.playerHandle input {
+    width: 60%;
+    margin-top: 8px;
+}
+
+.volume {
+    width: 30%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 30px;
+}
+
+.volume input {
+    margin-left: 16px;
+    margin-top: -5px;
+    width: 150px;
+}
+
+button {
+    outline: none;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 28px;
+}
+
+button:hover {
+    color: #fff;
+}
