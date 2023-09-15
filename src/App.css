@@ -23,6 +23,24 @@ h1 {
 }
 
 .song-container .big-img h2 {
+    animation: bounch 0.5s ease infinite;
+}
+
+@keyframes bounch {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.song-container .big-img h2 {
     color: white;
     font-family: 'Dancing Script', cursive;
     padding-bottom: 20px;
@@ -47,6 +65,10 @@ h1 {
     align-items: center;
     cursor: pointer;
     padding: 12px 16px;
+}
+
+.song.active {
+    background-color: rgb(246, 204, 246);
 }
 
 .song:hover {
@@ -115,14 +137,15 @@ h1 {
 .button {
     width: 100%;
     display: flex;
-    gap: 8px;
+    gap: 12px;
     justify-content: center;
     align-items: center;
 }
 
 .playerHandle input {
     width: 60%;
-    margin-top: 8px;
+    margin-inline: 8px;
+    cursor: pointer;
 }
 
 .volume {
@@ -138,6 +161,7 @@ h1 {
     margin-left: 16px;
     margin-top: -5px;
     width: 150px;
+    cursor: pointer;
 }
 
 button {
@@ -145,13 +169,20 @@ button {
     border: none;
     background-color: transparent;
     cursor: pointer;
-    font-size: 28px;
+    font-size: 24px;
+}
+
+.button-main {
+    font-size: 34px;
+    margin-top: 2px;
 }
 
 button:hover {
     color: #fff;
 }
 
-.on {
-    background: #878787;
+.duration-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

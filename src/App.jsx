@@ -96,7 +96,7 @@ function App() {
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolume] = useState(0.5);
+  const [volume, setVolume] = useState(1);
   const [isLooping, setIsLooping] = useState(false);
   const [isShuffle, setIsShuffle] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -108,55 +108,72 @@ function App() {
 
   useEffect(() => {
     const audio = audioRef.current;
-    const handleDurationchange = () => {
+    const handleDurationChange = () => {
       setDuration(audio.duration);
     };
-    const handleCurrentTimechange = () => {
+    const handleCurrentTimeChange = () => {
       setCurrentTime(audio.currentTime);
     };
     const handleNextSong = () => {
       nextSong();
     };
-    audio.addEventListener("loadedmetadata", handleDurationchange);
-    audio.addEventListener("timeupdate", handleCurrentTimechange);
+
+    audio.addEventListener("loadedmetadata", handleDurationChange);
+    audio.addEventListener("timeupdate", handleCurrentTimeChange);
     audio.addEventListener("ended", handleNextSong);
+
     return () => {
-      audio.removeEventListener("loadedmetadata", handleDurationchange);
-      audio.removeEventListener("timeupdate", handleCurrentTimechange);
+      audio.removeEventListener("loadedmetadata", handleDurationChange);
+      audio.removeEventListener("timeupdate", handleCurrentTimeChange);
       audio.removeEventListener("ended", handleNextSong);
     };
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTime, duration]);
+
   useEffect(() => {
-    if (isPlaying && currentSongIndex != -1) {
+    if (isPlaying) {
       audioRef.current.play();
     } else {
       audioRef.current.pause();
     }
-  }, [isPlaying, currentSongIndex]);
+  }, [isPlaying]);
 
   useEffect(() => {
-    if (currentSongIndex != -1) {
+    if (currentSongIndex !== -1) {
       const currentSong = songs[currentSongIndex];
       audioRef.current.src = currentSong.src;
       audioRef.current.load();
+      audioRef.current.play();
     }
   }, [currentSongIndex]);
 
   const nextSong = () => {
-    if (currentSongIndex === songs.length - 1) {
-      setCurrentSongIndex(0);
+    let newIndex;
+    if (isShuffle) {
+      newIndex = Math.floor(Math.random() * songs.length);
     } else {
-      setCurrentSongIndex(currentSongIndex + 1);
+      if (currentSongIndex === songs.length - 1) {
+        newIndex = 0;
+      } else {
+        newIndex = currentSongIndex + 1;
+      }
     }
-    setIsPlaying(false);
+
+    setCurrentSongIndex(newIndex);
   };
   const prevSong = () => {
-    if (currentSongIndex === 0) {
-      setCurrentSongIndex(songs.length - 1);
+    let newIndex;
+    if (isShuffle) {
+      newIndex = Math.floor(Math.random() * songs.length);
     } else {
-      setCurrentSongIndex(currentSongIndex - 1);
+      if (currentSongIndex === 0) {
+        newIndex = songs.length - 1;
+      } else {
+        newIndex = currentSongIndex - 1;
+      }
     }
-    setIsPlaying(false);
+
+    setCurrentSongIndex(newIndex);
   };
   const selectSong = (id) => {
     const songIndex = songs.findIndex((song) => {
@@ -176,7 +193,8 @@ function App() {
   const handleMute = () => {
     audioRef.current.muted = !audioRef.current.muted;
     setIsMuted(audioRef.current.muted);
-    setVolume(audioRef.current.muted ? 0 : 0.5);
+    const lastVolume = audioRef.current.volume;
+    setVolume(audioRef.current.muted ? 0 : lastVolume);
   };
 
   const handleLoop = () => {
@@ -200,19 +218,27 @@ function App() {
         duration,
         currentTime,
         audio: audioRef.current,
+        isLooping,
+        isShuffle,
+        setIsPlaying,
       }}
     >
       <h1>Playing List</h1>
       <div className="song-container">
         <div className="big-img">
           <h2>Now Playing</h2>
-          <img src={songs[currentSongIndex].img} />
+          <img
+            src={songs[currentSongIndex].img}
+            alt={songs[currentSongIndex].title}
+          />
         </div>
         <div className="songlist">
           {songs.map((song) => {
             return (
               <div
-                className="song"
+                className={`song ${
+                  song.id == songs[currentSongIndex].id ? "active" : ""
+                }`}
                 key={song.id}
                 onClick={() => selectSong(song.id)}
               >
@@ -226,6 +252,7 @@ function App() {
           <div className="songInfor">
             <img
               src={songs[currentSongIndex].img}
+              alt={songs[currentSongIndex].artist}
               className={`img ${isPlaying ? "active" : ""}`}
             />
             <div className="name">

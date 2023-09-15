@@ -1,7 +1,7 @@
-import React from "react";
 import { AiFillPlayCircle, AiFillPauseCircle } from "react-icons/ai";
-import { BiSkipNext, BiSkipPrevious, BiShuffle } from "react-icons/bi";
-import { TbRepeat, TbRepeatOff, TbRepeatOnce } from "react-icons/tb";
+import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
+import { TbRepeatOff, TbRepeatOnce } from "react-icons/tb";
+import { MdShuffle, MdShuffleOn } from "react-icons/md";
 import { useMp3Context } from "../hooks/useMp3Context";
 
 const Player = () => {
@@ -15,40 +15,44 @@ const Player = () => {
     duration,
     currentTime,
     audio,
+    isLooping,
+    isShuffle,
+    setIsPlaying,
   } = useMp3Context();
 
   const time_convert = (num) => {
     var hours = Math.floor(num / 60);
-    var minutes = (num % 60).toFixed(0);
+    var minutes = Math.floor(num % 60)
+      .toString()
+      .padStart(2, "0");
     return hours + ":" + minutes;
   };
-  console.log(handleShuffle);
+  const handlePlay = () => {
+    audio.play();
+    setIsPlaying(true);
+  };
+  const handlePause = () => {
+    audio.pause();
+    setIsPlaying(false);
+  };
+
   return (
     <div className="playerHandle">
       <div className="button">
         <button onClick={handleShuffle}>
-          {handleShuffle ? (
-            <div className="off">
-              <BiShuffle />
-            </div>
-          ) : (
-            <div className="on">
-              {" "}
-              <BiShuffle />
-            </div>
-          )}
+          {isShuffle ? <MdShuffleOn /> : <MdShuffle />}
         </button>
-        <button onClick={prevSong}>
+        <button className="button-main" onClick={prevSong}>
           <BiSkipPrevious />
         </button>
-        <button onClick={togglePlay}>
+        <button className="button-main" onClick={togglePlay}>
           {isPlaying ? <AiFillPauseCircle /> : <AiFillPlayCircle />}
         </button>
-        <button onClick={nextSong}>
+        <button className="button-main" onClick={nextSong}>
           <BiSkipNext />
         </button>
         <button onClick={handleLoop}>
-          <TbRepeat />
+          {isLooping ? <TbRepeatOnce /> : <TbRepeatOff />}
         </button>
       </div>
       <div className="duration-container">
@@ -62,8 +66,8 @@ const Player = () => {
           onChange={(e) => {
             audio.currentTime = e.target.value;
           }}
-          onMouseDown={() => audio.pause()}
-          onMouseUp={() => audio.play()}
+          onMouseDown={handlePause}
+          onMouseUp={handlePlay}
         />
         <span className="duration">{time_convert(duration)}</span>
       </div>
