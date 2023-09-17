@@ -186,3 +186,53 @@ button:hover {
     align-items: center;
     justify-content: center;
 }
+
+@media (max-width: 768px) {
+    #root {
+        width: 100%;
+    }
+
+    h1 {
+        padding: 20px;
+    }
+
+    .song-container {
+        display: block;
+        padding-bottom: 165px;
+    }
+
+    .big-img {
+        display: none;
+    }
+
+    .songlist {
+        width: 100%;
+        border: none;
+    }
+
+    .song {
+        padding-inline: 0;
+        border-bottom: 1px solid #333;
+    }
+
+    .player {
+        display: block;
+        height: auto;
+        padding: 12px;
+    }
+
+    .songInfor {
+        width: 100%;
+        margin-left: 0;
+        margin: 0 auto;
+    }
+
+    .playerHandle {
+        width: 100%;
+    }
+
+    .volume {
+        display: none;
+    }
+
+}
