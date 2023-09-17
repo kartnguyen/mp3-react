@@ -127,7 +127,7 @@ function App() {
       audio.removeEventListener("timeupdate", handleCurrentTimeChange);
       audio.removeEventListener("ended", handleNextSong);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTime, duration]);
 
   useEffect(() => {
@@ -181,7 +181,7 @@ function App() {
     });
     if (songIndex !== -1) {
       setCurrentSongIndex(songIndex);
-      setIsPlaying(false);
+      setIsPlaying(true);
     }
   };
 
